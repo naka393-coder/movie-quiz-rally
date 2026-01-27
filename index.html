@@ -295,7 +295,11 @@
         }
 
         .painting-frame {
-            position: relative; z-index: 1; width: min(800px, 100%); aspect-ratio: 16/9;
+            position: relative; z-index: 1; 
+            /* 幅を少し余裕を持たせて設定 */
+            width: min(800px, 90vw); 
+            /* SVGのviewBox(800x500)に合わせてアスペクト比を修正 */
+            aspect-ratio: 8/5;
             border: 15px solid #3e3025; 
             box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 0 0 2px #1a1510, 0 0 0 6px #5a4a3a, 0 20px 60px rgba(0,0,0,0.9);
             background: #000; overflow: hidden; transform: rotate(0.5deg);
@@ -577,7 +581,8 @@
     <section id="footer-scene">
         <div class="painting-frame">
             <div class="painting-inner-border"></div>
-            <svg class="scene-svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMax slice">
+            <!-- preserveAspectRatioを 'xMidYMid meet' に変更して、全体が必ず収まるように修正 -->
+            <svg class="scene-svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid meet">
                 <defs>
                     <linearGradient id="beamGradient" x1="0%" y1="100%" x2="100%" y2="0%">
                         <stop offset="0%" style="stop-color:rgba(255, 255, 255, 0.5);stop-opacity:1" />

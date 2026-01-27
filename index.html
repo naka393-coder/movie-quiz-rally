@@ -75,6 +75,9 @@
             box-shadow: 0 0 15px rgba(255,255,255,0.3);
         }
 
+        @keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInText { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
         /* --- 背景画像レイヤー --- */
         #bg-image {
             position: fixed;
@@ -342,73 +345,64 @@
             animation: fadeInText 2s ease 0.5s forwards; opacity: 0;
         }
 
-        /* 羊皮紙のコンテナ（影と形状） */
+        /* 羊皮紙のコンテナ */
         .ancient-scroll-wrapper {
             position: relative;
-            width: min(800px, 95vw);
-            max-height: 75vh;
-            filter: drop-shadow(10px 10px 20px rgba(0,0,0,0.8));
+            /* 画像サイズに合わせてなりゆきにする */
+            width: auto;
+            max-width: 95vw;
+            max-height: 80vh;
+            /* アニメーション */
             animation: slideUp 0.5s ease-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* 古文書のデザイン（ヴィンテージ風・クリップパス） */
+        /* 古文書のデザイン（完全にリセットして透明化） */
         .ancient-scroll {
-            width: 100%; height: 100%;
-            min-height: 60vh;
-            overflow: auto;
+            width: auto;
+            height: auto;
+            min-height: 0;
+            overflow: visible;
             
-            /* ベースカラーとテクスチャ */
-            background-color: #e3d6b1; 
-            background-image: 
-                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E"),
-                radial-gradient(circle at 50% 50%, transparent 60%, rgba(101, 67, 33, 0.2) 100%),
-                linear-gradient(225deg, transparent 20px, rgba(0,0,0,0.1) 20px, transparent 30px);
-
-            padding: 60px 50px;
+            /* 背景・装飾をすべて無効化 */
+            background: transparent !important;
+            background-image: none !important;
+            background-color: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+            clip-path: none !important; /* 切り抜きも解除 */
             
-            /* ギザギザの切り抜き */
-            clip-path: polygon(
-                2% 5%, 5% 2%, 10% 4%, 20% 1%, 30% 3%, 40% 1%, 50% 4%, 60% 2%, 70% 5%, 80% 2%, 90% 4%, 95% 0%, 
-                100% 5%, 98% 15%, 99% 25%, 97% 35%, 99% 45%, 96% 55%, 98% 65%, 97% 75%, 99% 85%, 96% 95%, 
-                95% 100%, 85% 97%, 75% 99%, 65% 96%, 55% 98%, 45% 96%, 35% 99%, 25% 97%, 15% 99%, 5% 96%, 
-                2% 90%, 4% 80%, 1% 70%, 3% 60%, 1% 50%, 4% 40%, 1% 30%, 3% 20%, 1% 10%
-            );
-
-            position: relative;
-            font-family: 'Yuji Syuku', serif; color: #3e2b20;
-            display: flex; flex-direction: column; align-items: center;
+            display: block;
         }
 
-        /* 右上の折れ耳 */
-        .ancient-scroll::after {
-            content: ''; position: absolute; top: 0; right: 0;
-            width: 50px; height: 50px;
-            background: linear-gradient(to bottom left, #d1c2a3 50%, transparent 50%);
-            z-index: 10; pointer-events: none;
+        /* 不要な擬似要素（折れ耳など）も非表示 */
+        .ancient-scroll::after, .ancient-scroll::before {
+            display: none !important;
         }
 
-        .ancient-header {
-            width: 100%; text-align: center; border-bottom: 2px solid #8b7355;
-            margin-bottom: 30px; padding-bottom: 10px; position: relative;
-        }
-        .ancient-title {
-            font-size: 1.8rem; font-weight: 700; color: #5a2a2a; letter-spacing: 0.2em;
-            text-shadow: 1px 1px 0px rgba(255,255,255,0.2);
+        /* 画像のスタイル */
+        .ancient-document-image {
+            max-width: 100%;
+            max-height: 70vh; /* 画面内に収まる高さ */
+            width: auto;
+            height: auto;
+            display: block;
+            /* 画像に対して影を落とす */
+            filter: drop-shadow(10px 10px 30px rgba(0,0,0,0.8));
         }
 
-        .ancient-grid-text {
-            writing-mode: vertical-rl; text-orientation: upright;
-            font-size: 1.1rem; line-height: 2.5em; letter-spacing: 0.8em; 
-            font-feature-settings: "palt" 0; font-variant-east-asian: full-width;
-            margin: 0 auto; font-weight: 500; white-space: pre; 
-            color: #2c1b10; position: relative; width: fit-content;
-            text-shadow: 0 0 2px rgba(62, 43, 32, 0.2);
+        /* テキスト関連のクラスは非表示（念のため） */
+        .ancient-header, .ancient-title, .ancient-grid-text {
+            display: none;
         }
 
         @media (max-width: 768px) {
-            .ancient-grid-text { font-size: 0.9rem; letter-spacing: 0.5em; line-height: 1.6em; }
-            .ancient-scroll { padding: 40px 30px; min-height: 50vh; }
-            .ancient-title { font-size: 1.4rem; }
+            /* スマホ用調整のリセット */
+            .ancient-scroll { padding: 0 !important; min-height: 0 !important; }
         }
 
         /* --- 7. 詳細拡大用オーバーレイ --- */
@@ -445,8 +439,6 @@
             transition: opacity 1.5s ease-in-out;
         }
 
-        @keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fadeInText { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes textFadeIn { to { opacity: 1; } }
         @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
         @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);} }
@@ -655,16 +647,8 @@
         <!-- 羊皮紙コンテナ -->
         <div class="ancient-scroll-wrapper">
             <div class="ancient-scroll">
-                <div class="ancient-header">
-                    <span class="ancient-title">【灯台守ノ遺文・断片】</span>
-                </div>
-                <div class="ancient-grid-text">
-地獄門の前で立ち止まりけり
-三度の番人を呼びて扉をあけ
-闇夜の影が深まりし刻実を見
-掟を固く見守り抜く真理の道
-静かに深く眠る海に光満ちて
-遥かなる夢の行先を照らす火</div>
+                <!-- 古文書画像 -->
+                <img src="https://i.imgur.com/45Qv4Sb.jpeg" alt="Ancient Document" class="ancient-document-image">
             </div>
         </div>
     </div>
@@ -679,7 +663,7 @@
     <div id="flash-effect"></div>
 
     <script>
-        // オープニングモーダルを閉じる関数（グローバル）
+        // グローバルスコープで関数を定義して確実に呼び出せるようにする
         function closeOpeningModal() {
             const overlay = document.getElementById('opening-modal-overlay');
             if(overlay) {
@@ -737,6 +721,8 @@
                 }
             }
             function drawNoise() { ctx.fillStyle="rgba(255,255,255,0.03)"; for(let i=0;i<40;i++) ctx.fillRect(Math.random()*width, Math.random()*height, 2, 2); }
+            
+            // Canvas初期化
             window.addEventListener('resize', resize); resize(); animate();
 
             /* --- ギミック関連 --- */
@@ -773,12 +759,14 @@
                 const clone = element.cloneNode(true);
                 clone.removeAttribute('onclick'); 
                 clone.classList.remove('scrap-item'); 
-                clone.style.transform = "none"; // 拡大時は回転解除
                 
-                // 画像などは最大幅に合わせる
+                // モーダルでは回転を解除
+                clone.style.transform = "none";
+                clone.style.transformOrigin = ""; 
                 clone.style.maxWidth = "100%";
                 clone.style.height = "auto";
-
+                // ラッパー付きの新聞なら中身だけ取り出しても良いが、ここではそのまま表示
+                
                 detailContent.innerHTML = ''; 
                 detailContent.appendChild(clone);
                 detailOverlay.classList.add('active');
